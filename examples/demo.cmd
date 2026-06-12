@@ -1,0 +1,4 @@
+SCREENSHOT|demo_screenshot.png
+MOUSEPOS|
+SCREENSIZE|
+PING|

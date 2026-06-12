@@ -1,0 +1,32 @@
+# Build artifacts
+bin/DesktopAgent.exe
+*.exe
+
+# .NET
+obj/
+bin/obj/
+*.user
+*.suo
+*.cache
+*.userprefs
+
+# Test outputs
+outputs/
+commands/
+*.png
+*.result
+screenshot*.png
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Python / logs
+__pycache__/
+*.pyc
+*.log
