@@ -1,4 +1,4 @@
-Add-Type -AssemblyName System.Windows.Forms
+﻿Add-Type -AssemblyName System.Windows.Forms
 
 $keySig = @'
 using System;
@@ -8,9 +8,25 @@ public class WinAPIKey {
     public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
     [DllImport("user32.dll")]
     public static extern short VkKeyScan(char ch);
+    [DllImport("user32.dll")]
+    public static extern IntPtr OpenInputDesktop(uint dwFlags, bool fInherit, uint dwDesiredAccess);
+    [DllImport("user32.dll")]
+    public static extern bool SetThreadDesktop(IntPtr hDesktop);
+    [DllImport("user32.dll")]
+    public static extern bool CloseDesktop(IntPtr hDesktop);
+    static bool _sw = false;
+    static IntPtr _hd = IntPtr.Zero;
+    public static void EnsureDesktop() {
+        if (_sw) return;
+        IntPtr h = OpenInputDesktop(0, false, 0x0002|0x0080|0x0100);
+        if (h == IntPtr.Zero) h = OpenInputDesktop(0, false, 0x0002|0x0080);
+        if (h != IntPtr.Zero && SetThreadDesktop(h)) { _hd = h; _sw = true; return; }
+        if (h != IntPtr.Zero) CloseDesktop(h);
+    }
 }
 '@
 Add-Type -TypeDefinition $keySig | Out-Null
+[WinAPIKey]::EnsureDesktop()
 
 $KEYEVENTF_KEYDOWN = 0x0000
 $KEYEVENTF_KEYUP   = 0x0002

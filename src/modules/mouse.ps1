@@ -1,4 +1,4 @@
-Add-Type -AssemblyName System.Windows.Forms
+﻿Add-Type -AssemblyName System.Windows.Forms
 
 $mouseSig = @'
 using System;
@@ -12,6 +12,21 @@ public class WinAPIMouse {
     public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
     [DllImport("user32.dll")]
     public static extern short GetAsyncKeyState(int vKey);
+    [DllImport("user32.dll")]
+    public static extern IntPtr OpenInputDesktop(uint dwFlags, bool fInherit, uint dwDesiredAccess);
+    [DllImport("user32.dll")]
+    public static extern bool SetThreadDesktop(IntPtr hDesktop);
+    [DllImport("user32.dll")]
+    public static extern bool CloseDesktop(IntPtr hDesktop);
+    static bool _sw = false;
+    static IntPtr _hd = IntPtr.Zero;
+    public static void EnsureDesktop() {
+        if (_sw) return;
+        IntPtr h = OpenInputDesktop(0, false, 0x0002|0x0080|0x0100);
+        if (h == IntPtr.Zero) h = OpenInputDesktop(0, false, 0x0002|0x0080);
+        if (h != IntPtr.Zero && SetThreadDesktop(h)) { _hd = h; _sw = true; return; }
+        if (h != IntPtr.Zero) CloseDesktop(h);
+    }
 }
 [StructLayout(LayoutKind.Sequential)]
 public struct POINT {
@@ -20,6 +35,7 @@ public struct POINT {
 }
 '@
 Add-Type -TypeDefinition $mouseSig | Out-Null
+[WinAPIMouse]::EnsureDesktop()
 
 $MOUSEEVENTF_LEFTDOWN   = 0x0002
 $MOUSEEVENTF_LEFTUP     = 0x0004

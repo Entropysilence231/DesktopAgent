@@ -5,9 +5,9 @@ param(
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Load all modules
-. "$scriptDir\screen.ps1"
-. "$scriptDir\mouse.ps1"
-. "$scriptDir\keyboard.ps1"
+ . "$scriptDir\..\src\modules\screen.ps1"
+ . "$scriptDir\..\src\modules\mouse.ps1"
+ . "$scriptDir\..\src\modules\keyboard.ps1"
 
 $OutputDir = "$scriptDir\..\outputs"
 
@@ -48,7 +48,7 @@ function Invoke-AgentAction {
     switch ($Action) {
         "screenshot" {
             $path = $Params["Path"]
-            if (-not $path) { $path = "$OutputDir\screenshot.png" }
+            if (-not $path) { $path = "$OutputDir\screenshot.jpg" }
             $result = Take-Screenshot -OutputPath $path
             Write-Host "SCREENSHOT: $result"
         }

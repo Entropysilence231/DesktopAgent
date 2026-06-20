@@ -1,0 +1,16 @@
+{
+    "name": "DesktopAgent",
+    "version": "1.0.0",
+    "description": "Windows Desktop Automation Agent",
+    "agent": {
+        "pollIntervalMs": 200,
+        "commandDir": "commands",
+        "timeoutMs": 10000
+    },
+    "paths": {
+        "executable": "bin/DesktopAgent.exe",
+        "source": "src/DesktopAgent.cs",
+        "modules": "src/modules",
+        "scripts": "scripts"
+    }
+}

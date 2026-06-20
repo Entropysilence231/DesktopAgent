@@ -8,7 +8,7 @@ param(
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $OutputDir = "$scriptDir\..\outputs"
-$CmdDir = "$OutputDir\commands"
+ $CmdDir = "$scriptDir\..\bin\commands"
 
 if (-not (Test-Path $CmdDir)) { New-Item -ItemType Directory -Path $CmdDir -Force | Out-Null }
 
@@ -43,7 +43,7 @@ if (-not $Action) {
 
 switch ($Action) {
     "screenshot" {
-        $path = $Arg1; if (-not $path) { $path = "$OutputDir\screenshot.png" }
+        $path = $Arg1; if (-not $path) { $path = "$OutputDir\screenshot.jpg" }
         $resp = Send-ToAgent "SCREENSHOT|$path"
         Write-Host "SCREENSHOT: $resp"
     }
